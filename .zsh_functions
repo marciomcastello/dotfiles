@@ -1,0 +1,29 @@
+cw() { cd $1; pwd; }
+
+cll() { cw $1; ll; }
+
+mc() { mkdir $1; cw $1; }
+
+search() {
+  if [[ "$1" != "" ]]; then
+    sudo find . -name "*$1*"
+  fi
+}
+
+chmod_number() {
+  if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    stat --format '%a' $1
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    stat -f "%OLp" $1
+  fi
+}
+
+del_branch(){ git branch -d $1; git push origin :$1; }
+
+port(){ sudo netstat -tulpn | grep ":$1"; }
+
+redo() { bundle exec rake db:migrate:redo VERSION=$1; }
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  brewdeps() { brew list -1 | while read cask; do echo -ne "\x1B[1;34m $cask \x1B[0m"; brew uses $cask --installed | awk '{printf(" %s ", $0)}'; echo ""; done }
+fi
